@@ -1,4 +1,5 @@
 import prisma from "../lib/prisma.js";
+import jwt from "jsonwebtoken";
 import bcryct from "bcrypt"; //tạo mã hash
 
 export const register = async (req, res) => {
@@ -45,6 +46,26 @@ export const login = async (req, res) => {
       return res.status(401).json({ message: "Invalid Credentials!" });
 
     //GENERATE COCKIE TOKEN AND SEND TO THE USER
+
+    // res.setHeader("Set-Cookie", "tes" + "Myvalue").json("sucess"); //Không đọc được cookie
+    const age = 1000 * 60 * 60 * 24 * 7;
+
+    const token = jwt.sign(
+      {
+        id: user.id,
+      },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: age }
+    );
+
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+        //secure:true  //đưa lên môi trường sản phẩm
+        maxAge: age,
+      })
+      .status(200)
+      .json({ message: "login succesfull" });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Failed to login!" });
@@ -52,5 +73,5 @@ export const login = async (req, res) => {
 };
 
 export const logout = (req, res) => {
-  console.log(req.body);
+  res.clearCookie("token").status(200).json({ message: "logout succesfull" });
 };
