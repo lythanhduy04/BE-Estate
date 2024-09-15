@@ -51,6 +51,7 @@ nav {
     align-items: center;
     justify-content: flex-end;
     background-color: #fcf5f3;
+    z-index: 9999;
 
     @include md {
       background-color: transparent;
@@ -102,8 +103,12 @@ nav {
       }
     }
 
+    .login {
+      z-index: 899;
+    }
     .register {
       background-color: #fece51;
+      z-index: 800;
     }
 
     .menuIcon {
