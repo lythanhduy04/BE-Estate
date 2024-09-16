@@ -16,8 +16,8 @@ function Login() {
     e.preventDefault(); //hạn chế làm mới trang
     setIsLoading(true);
     setError("");
-
     const formData = new FormData(e.target);
+
     const username = formData.get("username");
     const password = formData.get("password");
 
