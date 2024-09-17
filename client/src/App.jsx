@@ -6,6 +6,7 @@ import SinglePage from "./router/singlePage/singlePage.jsx";
 import ProfilePage from "./router/profilePage/profilePage.jsx";
 import ProfileUpdatePage from "./router/profileUpdatePage/profileUpdatePage.jsx";
 import Register from "./router/register/register.jsx";
+import NewPostPage from "./router/newPostPage/NewPostPage.jsx";
 import Login from "./router/login/login.jsx";
 
 function App() {
@@ -49,6 +50,10 @@ function App() {
         {
           path: "/profile/update",
           element: <ProfileUpdatePage />,
+        },
+        {
+          path: "/profile/add",
+          element: <NewPostPage />,
         },
       ],
     },
