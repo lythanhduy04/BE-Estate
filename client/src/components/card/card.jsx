@@ -4,12 +4,12 @@ import "./card.scss";
 function Card({ item }) {
   return (
     <div className="card">
-      <Link to={`${item.id}`} className="imgContainer">
-        <img src={item.img} alt="img" />
+      <Link to={`/${item.id}`} className="imgContainer">
+        <img src={item.images[0]} alt="img" />
       </Link>
       <div className="textContainer">
         <h2 className="title">
-          <Link to={`${item.id}`}>{item.title}</Link>
+          <Link to={`/${item.id}`}>{item.title}</Link>
         </h2>
         <p className="address">
           <img src="/pin.png" alt="" />
