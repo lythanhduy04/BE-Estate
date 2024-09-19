@@ -1,12 +1,32 @@
 import Slider from "../../components/slider/Slider";
 import Map from "../../components/map/Map.jsx";
 import "./singlePage.scss";
-import { singlePostData, userData } from "../../lib/dummydata";
-import { useLoaderData } from "react-router-dom";
+// import { singlePostData, userData } from "../../lib/dummydata";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import DOMPurify from "dompurify"; //npm i dompuify làm sạch các file scrip từ quill hay draw trước khi đưa vào app
+import { useContext, useState } from "react";
+import { AuthContext } from "../../context/AuthContext.jsx";
+import apiRequest from "../../lib/apiRequest.js";
 
 function SinglePage() {
   const post = useLoaderData();
+  const [saved, setSaved] = useState(post.isSaved);
+  const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleSave = async () => {
+    if (!currentUser) {
+      navigate("/login");
+    }
+    //after react 19 update to useoptimistik hook
+    setSaved((prev) => !prev);
+    try {
+      await apiRequest.post("/users/save", { postId: post.id });
+    } catch (err) {
+      console.log(err);
+      setSaved((prev) => !prev);
+    }
+  };
 
   return (
     <div className="singlePage">
@@ -93,8 +113,8 @@ function SinglePage() {
               <div className="featureText">
                 <span>School</span>
                 <p>
-                  {post.postDetail.school > 999
-                    ? post.postDetail.school / 1000 + "km"
+                  {post.postDetail.school >= 1000
+                    ? (post.postDetail.school / 1000).toFixed(1) + "km"
                     : post.postDetail.school + "m"}{" "}
                   away
                 </p>
@@ -126,9 +146,14 @@ function SinglePage() {
               <img src="/chat.png" alt="" />
               Send a message
             </button>
-            <button>
+            <button
+              onClick={handleSave}
+              style={{
+                backgroundColor: saved ? "#fece51" : "white",
+              }}
+            >
               <img src="/save.png" alt="" />
-              Send the place.
+              {saved ? "Place Saved" : "Save the place"}
             </button>
           </div>
         </div>
