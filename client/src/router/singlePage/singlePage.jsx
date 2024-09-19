@@ -15,11 +15,11 @@ function SinglePage() {
   const navigate = useNavigate();
 
   const handleSave = async () => {
+    setSaved((prev) => !prev);
     if (!currentUser) {
       navigate("/login");
     }
-    //after react 19 update to useoptimistik hook
-    setSaved((prev) => !prev);
+
     try {
       await apiRequest.post("/users/save", { postId: post.id });
     } catch (err) {

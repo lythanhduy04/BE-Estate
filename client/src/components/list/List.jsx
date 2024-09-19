@@ -1,11 +1,11 @@
 import "./list.scss";
 import Card from "../card/card.jsx";
-import { listData } from "../../lib/dummydata.js";
+// import { listData } from "../../lib/dummydata.js";
 
-function List() {
+function List({ posts }) {
   return (
     <div className="list">
-      {listData.map((item) => (
+      {posts.map((item) => (
         <Card key={item.id} item={item} />
       ))}
     </div>
