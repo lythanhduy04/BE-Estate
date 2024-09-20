@@ -10,8 +10,8 @@ import apiRequest from "../../lib/apiRequest.js";
 
 function SinglePage() {
   const post = useLoaderData();
-  const [saved, setSaved] = useState(post.isSaved);
   const { currentUser } = useContext(AuthContext);
+  const [saved, setSaved] = useState(post.isSaved);
   const navigate = useNavigate();
 
   const handleSave = async () => {
