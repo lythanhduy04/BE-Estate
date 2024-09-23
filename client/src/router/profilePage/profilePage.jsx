@@ -51,7 +51,6 @@ function ProfilePage() {
               <button>Add new post</button>
             </Link>
           </div>
-          {/* //load list */}
           <Suspense fallback={<p>loading...</p>}>
             <Await
               resolve={data.postResponse}
@@ -75,7 +74,14 @@ function ProfilePage() {
       </div>
       <div className="chatContainer">
         <div className="wrapper">
-          <Chat />
+          <Suspense fallback={<p>loading...</p>}>
+            <Await
+              resolve={data.chatResponse}
+              errorElement={<p>Error loading chats!</p>}
+            >
+              {(chatResponse) => <Chat chats={chatResponse.data} />}
+            </Await>
+          </Suspense>
         </div>
       </div>
     </div>
