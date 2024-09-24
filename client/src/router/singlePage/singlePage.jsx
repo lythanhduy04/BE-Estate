@@ -13,6 +13,7 @@ function SinglePage() {
   const { currentUser } = useContext(AuthContext);
   const [saved, setSaved] = useState(post.isSaved);
   const navigate = useNavigate();
+  const [chat, setChat] = useState(null);
 
   const handleSave = async () => {
     setSaved((prev) => !prev);
@@ -25,6 +26,35 @@ function SinglePage() {
     } catch (err) {
       console.log(err);
       setSaved((prev) => !prev);
+    }
+  };
+
+  // const handleChat = async () => {
+  //   if (!currentUser) {
+  //     navigate("/login");
+  //     return;
+  //   }
+  //   try {
+  //     const res = await apiRequest.post("/chats", {
+  //       currentUserId: currentUser.id,
+  //       userId: post.userId, // id của người đăng bài
+  //     });
+  //     // Nếu đã có hoặc vừa tạo cuộc trò chuyện, chuyển người dùng đến giao diện chat
+  //     setChat(res.data.chat);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+
+  const receiverId = post.userId;
+
+  const handleChat = async () => {
+    try {
+      const res = await apiRequest.post("/chats", { receiverId }); // Gửi ID của người nhận
+      console.log("Chat created or found:", res.data); // Xử lý dữ liệu trả về
+      setChat(res.data.chat);
+    } catch (err) {
+      console.error("Failed to create chat", err);
     }
   };
 
@@ -142,7 +172,7 @@ function SinglePage() {
             <Map items={[post]} />
           </div>
           <div className="buttons">
-            <button>
+            <button onClick={handleChat}>
               <img src="/chat.png" alt="" />
               Send a message
             </button>
@@ -156,6 +186,27 @@ function SinglePage() {
               {saved ? "Place Saved" : "Save the place"}
             </button>
           </div>
+
+          {chat && (
+            <div className="chatBox">
+              <div className="top">
+                <div className="user">
+                  <img src="/noava.png" alt="" />
+                  Nguoiban
+                </div>
+                <span className="close" onClick={() => setChat(null)}>
+                  X
+                </span>
+              </div>
+              <div className="center">
+                <div className="chatMessage"></div>
+              </div>
+              <form className="bottom">
+                <textarea name="text"></textarea>
+                <button>Send</button>
+              </form>
+            </div>
+          )}
         </div>
       </div>
     </div>

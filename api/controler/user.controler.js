@@ -154,3 +154,59 @@ export const getNotificationNumber = async (req, res) => {
     res.status(500).json({ message: "Failed to get profile posts!" });
   }
 };
+
+// export const addNewChat = async (req, res) => {
+//   const { currentUserId, userId } = req.body;
+
+//   try {
+//     const userIDsArray = [currentUserId, userId];
+
+//     // Kiểm tra nếu đã tồn tại cuộc trò chuyện giữa hai user
+//     const existingChat = await prisma.chat.findFirst({
+//       where: {
+//         userIDs: {
+//           hasEvery: userIDsArray,
+//         },
+//       },
+//     });
+
+//     if (existingChat) {
+//       // Nếu đã có cuộc trò chuyện, trả về thông tin
+//       return res.status(200).json({
+//         message: "Existing chat found",
+//         chatId: existingChat.id,
+//         chat: existingChat,
+//       });
+//     }
+
+//     // Nếu chưa có, tạo cuộc trò chuyện mới
+//     const newChat = await prisma.chat.create({
+//       data: {
+//         userIDs: userIDsArray,
+//         users: {
+//           connect: userIDsArray.map((id) => ({ id })),
+//         },
+//       },
+//       include: {
+//         users: {
+//           select: {
+//             id: true,
+//             username: true,
+//             avatar: true,
+//           },
+//         },
+//       },
+//     });
+
+//     return res.status(201).json({
+//       message: "New chat created",
+//       chatId: newChat.id,
+//       chat: newChat,
+//     });
+//   } catch (err) {
+//     console.error("Error creating new chat:", err);
+//     return res
+//       .status(500)
+//       .json({ message: "Failed to create chat", error: err.message });
+//   }
+// };

@@ -16,24 +16,31 @@ const addUser = (userId, socketId) => {
 };
 
 const removeUser = (socketId) => {
-  onlineUser = onlineUser.filter((user) => user.socketId === socketId);
+  onlineUser = onlineUser.filter((user) => user.socketId !== socketId);
 };
 
 const getUser = (userId) => {
-  return onlineUser.find((user) => (user.userId = userId));
+  return onlineUser.find((user) => user.userId === userId);
 };
 
 io.on("connection", (socket) => {
   socket.on("newUser", (userId) => {
     addUser(userId, socket.id);
+
     console.log(onlineUser);
   });
   socket.on("sendMessage", ({ receiverId, data }) => {
     const receiver = getUser(receiverId);
-    io, to(receiver.socketId).emit("getMessage", data);
+
+    if (receiver) {
+      io.to(receiver.socketId).emit("getMessage", data);
+    } else {
+      console.log(`Receiver with ID ${receiverId} not found.`);
+    }
   });
   socket.on("disconnect", () => {
     removeUser(socket.id);
+    socket.disconnect(true);
   });
 });
 

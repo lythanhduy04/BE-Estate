@@ -63,16 +63,38 @@ export const getChat = async (req, res) => {
   }
 };
 
+// export const addChat = async (req, res) => {
+//   const tokenUserId = req.userId;
+//   try {
+//     const newChat = await prisma.chat.create({
+//       data: { userIDs: [tokenUserId, req.body.receiverId] },
+//     });
+//     res.status(200).json(newChat);
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({ message: "failed to add chat" });
+//   }
+// };
+
 export const addChat = async (req, res) => {
-  const tokenUserId = req.userId;
+  const receiver = req.body.receiverId;
+  const tokenUserId = req.userId; // Lấy ID của người dùng từ token đã xác thực
+
+  if (tokenUserId === receiver) {
+    return res.status(400).json({ message: "Cannot chat with yourself" }); // Trả về thông báo lỗi
+  }
+
   try {
+    // Tạo đoạn chat mới với tokenUserId và receiverId
     const newChat = await prisma.chat.create({
-      data: { userIDs: [tokenUserId, req.body.receiverId] },
+      data: {
+        userIDs: [tokenUserId, receiver], // Gán người dùng hiện tại và người nhận
+      },
     });
-    res.status(200).json(newChat);
+    res.status(200).json(newChat); // Trả về đoạn chat mới tạo
   } catch (err) {
     console.log(err);
-    res.state(500).json({ message: "failed to add chat" });
+    res.status(500).json({ message: "Failed to add chat" }); // Sửa thành res.status
   }
 };
 
